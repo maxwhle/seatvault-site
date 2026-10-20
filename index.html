@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<title>SeatVault | Your unused seats, handled</title>
+<meta name="description" content="SeatVault manages the resale of your unused suite and season tickets, from pricing to final sale, so you never have to.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#FFFFFF; --surface:#F5F5F7; --ink:#1D1D1F; --muted:#6E6E73; --line:#E5E5EA;
+  --accent:#047857; --accent-ink:#FFFFFF; --seat:#D2D2D7; --header:rgba(255,255,255,0.82);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px);scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--header);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+img,svg{max-width:100%}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+h1,h2,h3{margin:0;color:var(--ink);text-wrap:balance}
+p{margin:0}
+
+/* header */
+.site-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--header);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.site-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:800;font-size:19px;letter-spacing:-0.04em}
+.brand:hover{text-decoration:none}
+.mark{width:40px;height:24px;flex:none}
+.mark .t{fill:var(--ink)}
+.mark .h{fill:var(--bg)}
+.mark .r{fill:none;stroke:var(--bg);stroke-width:8}
+.mark .k{fill:var(--accent)}
+.mark .p{stroke:var(--accent-ink);stroke-width:3;stroke-linecap:round}
+.nav{display:flex;align-items:center;gap:28px;font-size:14px}
+.nav a{color:var(--muted)}
+.nav a:hover{color:var(--ink);text-decoration:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 26px;border-radius:980px;font-weight:500;font-size:17px;border:1px solid var(--accent);transition:background-color .2s,color .2s}
+.btn:hover{text-decoration:none}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.12)}
+.btn-secondary{background:transparent;color:var(--accent)}
+.btn-secondary:hover{background:var(--accent);color:var(--accent-ink)}
+.nav .btn{min-height:36px;padding:0 18px;font-size:14px}
+.nav .btn-primary{color:var(--accent-ink)}
+
+/* hero */
+.hero{text-align:center;padding:96px 0 40px}
+.hero h1{font-size:clamp(44px,7.2vw,92px);font-weight:800;line-height:1.02;letter-spacing:-0.045em;max-width:14ch;margin:0 auto}
+.hero .lede{margin:28px auto 0;max-width:34ch;font-size:clamp(19px,2vw,23px);line-height:1.45;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:40px}
+.hero-visual{max-width:900px;margin:56px auto 0;padding:0 24px}
+.seatmap{display:block;width:100%;height:auto}
+.seatmap .stage{fill:none;stroke:var(--line);stroke-width:3;stroke-linecap:round}
+.seat{fill:var(--seat)}
+.seat.released{fill:transparent;stroke:var(--accent);stroke-width:2.5;animation:sell .5s ease forwards;animation-delay:var(--d)}
+@keyframes sell{to{fill:var(--accent);stroke:var(--accent)}}
+.caption{margin:28px auto 0;max-width:40ch;text-align:center;font-size:19px;font-weight:600;letter-spacing:-0.015em;color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 28px;margin-top:14px;font-size:14px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:14px;height:12px;border-radius:4px;display:inline-block}
+.legend .k1{background:var(--seat)}
+.legend .k2{border:2px solid var(--accent)}
+.legend .k3{background:var(--accent)}
+
+/* sections */
+.section{padding:120px 0}
+.section.alt{background:var(--surface)}
+.section-head{text-align:center;max-width:640px;margin:0 auto 64px}
+.section-head h2{font-size:clamp(34px,4.6vw,56px);font-weight:700;line-height:1.07;letter-spacing:-0.035em}
+.section-head p{margin-top:18px;font-size:19px;color:var(--muted)}
+
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;list-style:none;margin:0;padding:0}
+.step{background:var(--bg);border-radius:28px;padding:40px 34px 44px}
+.step .num{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--surface);font-weight:700;margin-bottom:28px}
+.step:last-child .num{background:var(--accent);color:var(--accent-ink)}
+.step h3{font-size:24px;font-weight:700;letter-spacing:-0.025em;margin-bottom:10px}
+.step p{color:var(--muted)}
+
+.points{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:56px 64px;max-width:860px;margin:0 auto}
+.point{display:grid;grid-template-columns:36px 1fr;gap:6px 18px;align-content:start}
+.point svg{grid-row:span 2;width:30px;height:30px;stroke:var(--accent);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+.point h3{font-size:19px;font-weight:600;letter-spacing:-0.01em}
+.point p{color:var(--muted)}
+
+.audience{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px}
+.audience div{border-top:2px solid var(--ink);padding-top:24px}
+.audience h3{font-size:24px;font-weight:700;letter-spacing:-0.025em;margin-bottom:10px}
+.audience p{color:var(--muted)}
+
+.proof{text-align:center}
+.proof .kicker{font-weight:600;color:var(--accent);font-size:17px;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:720px;margin:8px auto 0}
+.stat{background:var(--surface);border-radius:28px;padding:44px 20px}
+.stat b{display:block;font-size:clamp(40px,5vw,60px);font-weight:800;letter-spacing:-0.045em;line-height:1}
+.stat span{display:block;margin-top:10px;font-size:15px;color:var(--muted)}
+.quote{max-width:760px;margin:80px auto 0}
+.quote p{font-size:clamp(22px,2.6vw,30px);line-height:1.38;font-weight:500;letter-spacing:-0.015em}
+.quote footer{margin-top:16px;color:var(--muted);font-size:15px}
+
+.faq{max-width:760px;margin:0 auto}
+.faq details{border-bottom:1px solid var(--line)}
+.faq details:first-child{border-top:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:26px 4px;font-size:20px;font-weight:600;letter-spacing:-0.015em}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-weight:400;font-size:28px;color:var(--muted);transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 4px 28px;color:var(--muted);max-width:62ch}
+
+.contact{text-align:center;padding:140px 0}
+.contact h2{font-size:clamp(40px,6vw,76px);font-weight:800;line-height:1.02;letter-spacing:-0.045em}
+.contact .lede{margin:22px auto 0;max-width:36ch;font-size:19px;color:var(--muted)}
+.contact .alt-line{margin-top:28px;font-size:15px;color:var(--muted)}
+
+.site-footer{border-top:1px solid var(--line)}
+.site-footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding-top:28px;padding-bottom:28px;font-size:13px;color:var(--muted)}
+.site-footer .brand{font-size:16px}
+.site-footer .mark{width:32px;height:19px}
+
+@media (max-width:860px){
+  .nav a:not(.btn){display:none}
+  .steps,.audience{grid-template-columns:minmax(0,1fr);max-width:560px;margin-left:auto;margin-right:auto}
+  .stats,.faq{max-width:560px}
+  .steps{gap:12px}
+  .step{display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:20px;row-gap:6px;align-items:start;padding:28px 28px 30px;border-radius:24px}
+  .step .num{grid-row:span 2;margin:0}
+  .step h3{font-size:21px;margin:0;align-self:center;min-height:44px;display:flex;align-items:center}
+  .points{grid-template-columns:minmax(0,1fr);gap:32px;max-width:560px}
+  .audience{gap:36px}
+  .stats{gap:12px}
+  .stat{padding:32px 20px}
+  .section{padding:72px 0}
+  .section-head{margin-bottom:36px}
+  .section-head p{font-size:17px;margin-top:14px}
+  .hero{padding:56px 0 24px}
+  .hero-visual{margin-top:40px}
+  .quote{margin-top:48px}
+  .faq summary{font-size:18px;padding:22px 4px}
+  .contact{padding:96px 0}
+}
+@media (max-width:520px){
+  .stats{grid-template-columns:minmax(0,1fr)}
+  .step{padding:24px 22px 26px;column-gap:16px}
+  .hero-visual{padding:0 12px}
+}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  .seat.released{animation:none;fill:var(--accent)}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="SeatVault home"><svg class="mark" viewBox="0 0 200 120" aria-hidden="true"><path class="t" d="M22 14H46A6 6 0 0 0 58 14H142A6 6 0 0 0 154 14H178A14 14 0 0 1 192 28V48A12 12 0 0 0 192 72V92A14 14 0 0 1 178 106H154A6 6 0 0 0 142 106H58A6 6 0 0 0 46 106H22A14 14 0 0 1 8 92V72A12 12 0 0 0 8 48V28A14 14 0 0 1 22 14Z"></path><circle class="h" cx="52" cy="44" r="3.2"></circle><circle class="h" cx="52" cy="60" r="3.2"></circle><circle class="h" cx="52" cy="76" r="3.2"></circle><circle class="h" cx="148" cy="44" r="3.2"></circle><circle class="h" cx="148" cy="60" r="3.2"></circle><circle class="h" cx="148" cy="76" r="3.2"></circle><circle class="r" cx="100" cy="60" r="25"></circle><circle class="k" cx="100" cy="60" r="12"></circle><line class="p" x1="100" y1="60" x2="105.46" y2="53.49"></line></svg>SeatVault</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#who">Who it’s for</a>
+      <a href="#results">Results</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-primary js-book" href="#contact">Book a call</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Your unused seats, handled.</h1>
+      <p class="lede">We list, price and manage the resale of your suite and season tickets, so they sell without you ever touching a listing.</p>
+      <div class="actions">
+        <a class="btn btn-primary js-book" href="#contact">Book a 15-minute call</a>
+        <a class="btn btn-secondary js-text" href="sms:+14805193669">Text us</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg class="seatmap" viewBox="158 196 684 314" role="img" aria-label="Seating section where a few unused seats are released and then sold"><path class="stage" d="M347.2 549.7 A260 260 0 0 1 652.8 549.7"></path><rect class="seat" x="310.8" y="471.6" width="24" height="20" rx="6" transform="rotate(-32.5 322.8 481.6)"></rect><rect class="seat" x="340.4" y="454.8" width="24" height="20" rx="6" transform="rotate(-26.6 352.4 464.8)"></rect><rect class="seat" x="371.6" y="441.2" width="24" height="20" rx="6" transform="rotate(-20.7 383.6 451.2)"></rect><rect class="seat" x="403.9" y="430.9" width="24" height="20" rx="6" transform="rotate(-14.8 415.9 440.9)"></rect><rect class="seat" x="437.2" y="423.9" width="24" height="20" rx="6" transform="rotate(-8.9 449.2 433.9)"></rect><rect class="seat" x="471.0" y="420.4" width="24" height="20" rx="6" transform="rotate(-3.0 483.0 430.4)"></rect><rect class="seat" x="505.0" y="420.4" width="24" height="20" rx="6" transform="rotate(3.0 517.0 430.4)"></rect><rect class="seat" x="538.8" y="423.9" width="24" height="20" rx="6" transform="rotate(8.9 550.8 433.9)"></rect><rect class="seat" x="572.1" y="430.9" width="24" height="20" rx="6" transform="rotate(14.8 584.1 440.9)"></rect><rect class="seat" x="604.4" y="441.2" width="24" height="20" rx="6" transform="rotate(20.7 616.4 451.2)"></rect><rect class="seat" x="635.6" y="454.8" width="24" height="20" rx="6" transform="rotate(26.6 647.6 464.8)"></rect><rect class="seat" x="665.2" y="471.6" width="24" height="20" rx="6" transform="rotate(32.5 677.2 481.6)"></rect><rect class="seat" x="279.8" y="441.7" width="24" height="20" rx="6" transform="rotate(-34.0 291.8 451.7)"></rect><rect class="seat" x="308.8" y="424.0" width="24" height="20" rx="6" transform="rotate(-28.8 320.8 434.0)"></rect><rect class="seat" x="339.3" y="409.0" width="24" height="20" rx="6" transform="rotate(-23.6 351.3 419.0)"></rect><rect class="seat" x="371.0" y="396.9" width="24" height="20" rx="6" transform="rotate(-18.3 383.0 406.9)"></rect><rect class="seat" x="403.7" y="387.7" width="24" height="20" rx="6" transform="rotate(-13.1 415.7 397.7)"></rect><rect class="seat" x="437.2" y="381.5" width="24" height="20" rx="6" transform="rotate(-7.9 449.2 391.5)"></rect><rect class="seat released" style="--d:600ms" x="471.0" y="378.4" width="24" height="20" rx="6" transform="rotate(-2.6 483.0 388.4)"></rect><rect class="seat released" style="--d:740ms" x="505.0" y="378.4" width="24" height="20" rx="6" transform="rotate(2.6 517.0 388.4)"></rect><rect class="seat released" style="--d:880ms" x="538.8" y="381.5" width="24" height="20" rx="6" transform="rotate(7.9 550.8 391.5)"></rect><rect class="seat" x="572.3" y="387.7" width="24" height="20" rx="6" transform="rotate(13.1 584.3 397.7)"></rect><rect class="seat" x="605.0" y="396.9" width="24" height="20" rx="6" transform="rotate(18.3 617.0 406.9)"></rect><rect class="seat" x="636.7" y="409.0" width="24" height="20" rx="6" transform="rotate(23.6 648.7 419.0)"></rect><rect class="seat" x="667.2" y="424.0" width="24" height="20" rx="6" transform="rotate(28.8 679.2 434.0)"></rect><rect class="seat" x="696.2" y="441.7" width="24" height="20" rx="6" transform="rotate(34.0 708.2 451.7)"></rect><rect class="seat" x="248.8" y="412.1" width="24" height="20" rx="6" transform="rotate(-35.3 260.8 422.1)"></rect><rect class="seat" x="277.3" y="393.6" width="24" height="20" rx="6" transform="rotate(-30.6 289.3 403.6)"></rect><rect class="seat" x="307.3" y="377.5" width="24" height="20" rx="6" transform="rotate(-25.9 319.3 387.5)"></rect><rect class="seat" x="338.5" y="364.0" width="24" height="20" rx="6" transform="rotate(-21.2 350.5 374.0)"></rect><rect class="seat" x="370.6" y="353.0" width="24" height="20" rx="6" transform="rotate(-16.5 382.6 363.0)"></rect><rect class="seat" x="403.6" y="344.7" width="24" height="20" rx="6" transform="rotate(-11.8 415.6 354.7)"></rect><rect class="seat" x="437.1" y="339.1" width="24" height="20" rx="6" transform="rotate(-7.1 449.1 349.1)"></rect><rect class="seat released" style="--d:1020ms" x="471.0" y="336.3" width="24" height="20" rx="6" transform="rotate(-2.4 483.0 346.3)"></rect><rect class="seat released" style="--d:1160ms" x="505.0" y="336.3" width="24" height="20" rx="6" transform="rotate(2.4 517.0 346.3)"></rect><rect class="seat released" style="--d:1300ms" x="538.9" y="339.1" width="24" height="20" rx="6" transform="rotate(7.1 550.9 349.1)"></rect><rect class="seat" x="572.4" y="344.7" width="24" height="20" rx="6" transform="rotate(11.8 584.4 354.7)"></rect><rect class="seat" x="605.4" y="353.0" width="24" height="20" rx="6" transform="rotate(16.5 617.4 363.0)"></rect><rect class="seat" x="637.5" y="364.0" width="24" height="20" rx="6" transform="rotate(21.2 649.5 374.0)"></rect><rect class="seat" x="668.7" y="377.5" width="24" height="20" rx="6" transform="rotate(25.9 680.7 387.5)"></rect><rect class="seat" x="698.7" y="393.6" width="24" height="20" rx="6" transform="rotate(30.6 710.7 403.6)"></rect><rect class="seat" x="727.2" y="412.1" width="24" height="20" rx="6" transform="rotate(35.3 739.2 422.1)"></rect><rect class="seat" x="231.8" y="372.7" width="24" height="20" rx="6" transform="rotate(-34.2 243.8 382.7)"></rect><rect class="seat" x="260.7" y="354.7" width="24" height="20" rx="6" transform="rotate(-29.9 272.7 364.7)"></rect><rect class="seat" x="290.7" y="338.9" width="24" height="20" rx="6" transform="rotate(-25.6 302.7 348.9)"></rect><rect class="seat" x="321.9" y="325.3" width="24" height="20" rx="6" transform="rotate(-21.4 333.9 335.3)"></rect><rect class="seat" x="354.0" y="314.1" width="24" height="20" rx="6" transform="rotate(-17.1 366.0 324.1)"></rect><rect class="seat" x="386.8" y="305.4" width="24" height="20" rx="6" transform="rotate(-12.8 398.8 315.4)"></rect><rect class="seat" x="420.3" y="299.1" width="24" height="20" rx="6" transform="rotate(-8.5 432.3 309.1)"></rect><rect class="seat" x="454.0" y="295.3" width="24" height="20" rx="6" transform="rotate(-4.3 466.0 305.3)"></rect><rect class="seat" x="488.0" y="294.0" width="24" height="20" rx="6" transform="rotate(0.0 500.0 304.0)"></rect><rect class="seat" x="522.0" y="295.3" width="24" height="20" rx="6" transform="rotate(4.3 534.0 305.3)"></rect><rect class="seat" x="555.7" y="299.1" width="24" height="20" rx="6" transform="rotate(8.5 567.7 309.1)"></rect><rect class="seat" x="589.2" y="305.4" width="24" height="20" rx="6" transform="rotate(12.8 601.2 315.4)"></rect><rect class="seat" x="622.0" y="314.1" width="24" height="20" rx="6" transform="rotate(17.1 634.0 324.1)"></rect><rect class="seat released" style="--d:1440ms" x="654.1" y="325.3" width="24" height="20" rx="6" transform="rotate(21.4 666.1 335.3)"></rect><rect class="seat released" style="--d:1580ms" x="685.3" y="338.9" width="24" height="20" rx="6" transform="rotate(25.6 697.3 348.9)"></rect><rect class="seat" x="715.3" y="354.7" width="24" height="20" rx="6" transform="rotate(29.9 727.3 364.7)"></rect><rect class="seat" x="744.2" y="372.7" width="24" height="20" rx="6" transform="rotate(34.2 756.2 382.7)"></rect><rect class="seat" x="200.9" y="343.1" width="24" height="20" rx="6" transform="rotate(-35.2 212.9 353.1)"></rect><rect class="seat" x="229.3" y="324.5" width="24" height="20" rx="6" transform="rotate(-31.3 241.3 334.5)"></rect><rect class="seat" x="259.0" y="307.8" width="24" height="20" rx="6" transform="rotate(-27.4 271.0 317.8)"></rect><rect class="seat" x="289.7" y="293.2" width="24" height="20" rx="6" transform="rotate(-23.5 301.7 303.2)"></rect><rect class="seat" x="321.3" y="280.7" width="24" height="20" rx="6" transform="rotate(-19.6 333.3 290.7)"></rect><rect class="seat" x="353.7" y="270.5" width="24" height="20" rx="6" transform="rotate(-15.6 365.7 280.5)"></rect><rect class="seat" x="386.7" y="262.4" width="24" height="20" rx="6" transform="rotate(-11.7 398.7 272.4)"></rect><rect class="seat" x="420.2" y="256.6" width="24" height="20" rx="6" transform="rotate(-7.8 432.2 266.6)"></rect><rect class="seat" x="454.0" y="253.2" width="24" height="20" rx="6" transform="rotate(-3.9 466.0 263.2)"></rect><rect class="seat" x="488.0" y="252.0" width="24" height="20" rx="6" transform="rotate(0.0 500.0 262.0)"></rect><rect class="seat" x="522.0" y="253.2" width="24" height="20" rx="6" transform="rotate(3.9 534.0 263.2)"></rect><rect class="seat" x="555.8" y="256.6" width="24" height="20" rx="6" transform="rotate(7.8 567.8 266.6)"></rect><rect class="seat" x="589.3" y="262.4" width="24" height="20" rx="6" transform="rotate(11.7 601.3 272.4)"></rect><rect class="seat" x="622.3" y="270.5" width="24" height="20" rx="6" transform="rotate(15.6 634.3 280.5)"></rect><rect class="seat released" style="--d:1720ms" x="654.7" y="280.7" width="24" height="20" rx="6" transform="rotate(19.6 666.7 290.7)"></rect><rect class="seat released" style="--d:1860ms" x="686.3" y="293.2" width="24" height="20" rx="6" transform="rotate(23.5 698.3 303.2)"></rect><rect class="seat" x="717.0" y="307.8" width="24" height="20" rx="6" transform="rotate(27.4 729.0 317.8)"></rect><rect class="seat" x="746.7" y="324.5" width="24" height="20" rx="6" transform="rotate(31.3 758.7 334.5)"></rect><rect class="seat" x="775.1" y="343.1" width="24" height="20" rx="6" transform="rotate(35.2 787.1 353.1)"></rect><rect class="seat" x="170.0" y="313.5" width="24" height="20" rx="6" transform="rotate(-36.1 182.0 323.5)"></rect><rect class="seat" x="198.1" y="294.4" width="24" height="20" rx="6" transform="rotate(-32.5 210.1 304.4)"></rect><rect class="seat" x="227.4" y="277.1" width="24" height="20" rx="6" transform="rotate(-28.9 239.4 287.1)"></rect><rect class="seat" x="257.6" y="261.6" width="24" height="20" rx="6" transform="rotate(-25.3 269.6 271.6)"></rect><rect class="seat" x="288.8" y="248.1" width="24" height="20" rx="6" transform="rotate(-21.6 300.8 258.1)"></rect><rect class="seat released" style="--d:2000ms" x="320.8" y="236.5" width="24" height="20" rx="6" transform="rotate(-18.0 332.8 246.5)"></rect><rect class="seat released" style="--d:2140ms" x="353.4" y="227.0" width="24" height="20" rx="6" transform="rotate(-14.4 365.4 237.0)"></rect><rect class="seat released" style="--d:2280ms" x="386.6" y="219.6" width="24" height="20" rx="6" transform="rotate(-10.8 398.6 229.6)"></rect><rect class="seat released" style="--d:2420ms" x="420.2" y="214.3" width="24" height="20" rx="6" transform="rotate(-7.2 432.2 224.3)"></rect><rect class="seat" x="454.0" y="211.1" width="24" height="20" rx="6" transform="rotate(-3.6 466.0 221.1)"></rect><rect class="seat" x="488.0" y="210.0" width="24" height="20" rx="6" transform="rotate(0.0 500.0 220.0)"></rect><rect class="seat" x="522.0" y="211.1" width="24" height="20" rx="6" transform="rotate(3.6 534.0 221.1)"></rect><rect class="seat" x="555.8" y="214.3" width="24" height="20" rx="6" transform="rotate(7.2 567.8 224.3)"></rect><rect class="seat" x="589.4" y="219.6" width="24" height="20" rx="6" transform="rotate(10.8 601.4 229.6)"></rect><rect class="seat" x="622.6" y="227.0" width="24" height="20" rx="6" transform="rotate(14.4 634.6 237.0)"></rect><rect class="seat" x="655.2" y="236.5" width="24" height="20" rx="6" transform="rotate(18.0 667.2 246.5)"></rect><rect class="seat" x="687.2" y="248.1" width="24" height="20" rx="6" transform="rotate(21.6 699.2 258.1)"></rect><rect class="seat" x="718.4" y="261.6" width="24" height="20" rx="6" transform="rotate(25.3 730.4 271.6)"></rect><rect class="seat" x="748.6" y="277.1" width="24" height="20" rx="6" transform="rotate(28.9 760.6 287.1)"></rect><rect class="seat" x="777.9" y="294.4" width="24" height="20" rx="6" transform="rotate(32.5 789.9 304.4)"></rect><rect class="seat" x="806.0" y="313.5" width="24" height="20" rx="6" transform="rotate(36.1 818.0 323.5)"></rect></svg>
+    </div>
+  </section>
+
+  <section class="section alt" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>You send the games. We handle the rest.</h2>
+      </div>
+      <ol class="steps">
+        <li class="step"><div class="num">1</div><h3>Tell us the games.</h3><p>Let us know which events you can’t make and how many seats to sell.</p></li>
+        <li class="step"><div class="num">2</div><h3>We manage the listing.</h3><p>We list your seats, watch the market, and adjust the price until they sell. Every buyer transfer is handled too.</p></li>
+        <li class="step"><div class="num">3</div><h3>Get paid.</h3><p>After the seats sell, the money is deposited straight to your account.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Built around you.</h2>
+        <p>A personal service, not a platform. Every arrangement is set up around your seats, your schedule and your terms.</p>
+      </div>
+      <div class="points">
+        <div class="point"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle><path d="M4 4l16 16"></path></svg><h3>Nothing to monitor</h3><p>No checking prices, relisting or chasing buyers. It’s all taken care of.</p></div>
+        <div class="point"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg><h3>Private and discreet</h3><p>Everything stays in accounts under your name, and your seats and schedule stay between us.</p></div>
+        <div class="point"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="3"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg><h3>Your account, your money</h3><p>Seats sell through accounts in your name, so every dollar lands with you. We send one simple invoice each month.</p></div>
+        <div class="point"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><h3>Last-minute works</h3><p>Plans change. Text us as late as game day and we’ll still get your seats listed.</p></div>
+        <div class="point"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"></rect><path d="M10 16V8h3a2.5 2.5 0 0 1 0 5h-3"></path></svg><h3>Parking passes too</h3><p>Not using your parking? We sell passes right alongside your tickets.</p></div>
+        <div class="point"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg><h3>One point of contact</h3><p>A real person who knows your seats, not a support queue.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="who">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>For people with better things to do.</h2>
+        <p>If your seats matter but your time matters more, we take the resale off your plate.</p>
+      </div>
+      <div class="audience">
+        <div><h3>Suite owners</h3><p>Full-season suites rarely get used every night. We make sure the off nights don’t go to waste.</p></div>
+        <div><h3>Corporate seat holders</h3><p>When client tickets go unused, we handle the resale so your team doesn’t have to.</p></div>
+        <div><h3>Season ticket holders</h3><p>Can’t make every game? Send them our way and forget about it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section proof" id="results">
+    <div class="wrap">
+      <p class="kicker">Real results from a single client</p>
+      <div class="section-head">
+        <h2>One suite. One season. Zero listings touched.</h2>
+        <p>Last season, one Philadelphia suite owner sent us the Sixers and Flyers games they couldn’t make. We handled every listing, price change and transfer, and they never lifted a finger.</p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>35</b><span>Games handled</span></div>
+        <div class="stat"><b>$30,000+</b><span>Earned from unused seats</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section alt" id="faq">
+    <div class="wrap">
+      <div class="section-head"><h2>Questions, answered.</h2></div>
+      <div class="faq">
+        <details><summary>How is the profit split?</summary><p>Every arrangement is different. We set terms that fit your seats and how often you release them, and walk through it together on your first call.</p></details>
+        <details><summary>Will I need to keep an eye on my listings?</summary><p>No. We monitor every listing, adjust pricing as game day gets closer, and see it through to the sale. Since every account stays in your name, you can always look in if you want to.</p></details>
+        <details><summary>Do I have to release every game?</summary><p>No. You decide which games to release and how many seats. Keep the games you want, any time.</p></details>
+        <details><summary>Where are my tickets sold?</summary><p>Through your ticketing platform or other secondary sites, depending on what gets you the best result. Every account stays in your name.</p></details>
+        <details><summary>How does the money work?</summary><p>Every sale pays out directly to your account, in your name. At the end of each month, we send you one invoice for our share.</p></details>
+        <details><summary>What if I find out last minute that I can’t go?</summary><p>Send us a text. We’ve sold seats as late as the day of the game.</p></details>
+        <details><summary>How do I get started?</summary><p>Book a 15-minute call or send a text. We’ll learn about your seats and take it from there.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <h2>Let’s take this off your plate.</h2>
+      <p class="lede">A 15-minute call is all it takes to get set up.</p>
+      <div class="actions">
+        <a class="btn btn-primary js-book" href="#contact">Book a 15-minute call</a>
+        <a class="btn btn-secondary js-text" href="sms:+14805193669"><span class="js-text-label">Text (480) 519-3669</span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="SeatVault home"><svg class="mark" viewBox="0 0 200 120" aria-hidden="true"><path class="t" d="M22 14H46A6 6 0 0 0 58 14H142A6 6 0 0 0 154 14H178A14 14 0 0 1 192 28V48A12 12 0 0 0 192 72V92A14 14 0 0 1 178 106H154A6 6 0 0 0 142 106H58A6 6 0 0 0 46 106H22A14 14 0 0 1 8 92V72A12 12 0 0 0 8 48V28A14 14 0 0 1 22 14Z"></path><circle class="h" cx="52" cy="44" r="3.2"></circle><circle class="h" cx="52" cy="60" r="3.2"></circle><circle class="h" cx="52" cy="76" r="3.2"></circle><circle class="h" cx="148" cy="44" r="3.2"></circle><circle class="h" cx="148" cy="60" r="3.2"></circle><circle class="h" cx="148" cy="76" r="3.2"></circle><circle class="r" cx="100" cy="60" r="25"></circle><circle class="k" cx="100" cy="60" r="12"></circle><line class="p" x1="100" y1="60" x2="105.46" y2="53.49"></line></svg>SeatVault</a>
+    <span>© 2026 SeatVault. All rights reserved.</span>
+  </div>
+</footer>
+
+<script>
+// Fill these in and every button on the page updates.
+const CONFIG = {
+  bookingUrl: "",      // e.g. your Calendly link
+  phone: "+14805193669",
+  phoneDisplay: "(480) 519-3669"
+  email: ""            // e.g. "hello@seatvault.com"
+};
+if (CONFIG.bookingUrl) document.querySelectorAll('.js-book').forEach(a => { a.href = CONFIG.bookingUrl; a.target = "_blank"; a.rel = "noopener"; });
+if (CONFIG.phone) {
+  document.querySelectorAll('.js-text').forEach(a => { a.href = "sms:" + CONFIG.phone; });
+  document.querySelectorAll('.js-text-label').forEach(s => { s.textContent = "Text " + (CONFIG.phoneDisplay || CONFIG.phone); });
+}
+if (CONFIG.email) document.querySelectorAll('.js-email').forEach(a => { a.href = "mailto:" + CONFIG.email; a.textContent = CONFIG.email; });
+</script>
+</body>
+</html>
