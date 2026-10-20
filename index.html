@@ -271,6 +271,7 @@ p{margin:0}
         <a class="btn btn-primary js-book" href="https://calendar.app.google/gTCp6uxVX7fLuyzNA" target="_blank" rel="noopener">Book a 15-minute call</a>
         <a class="btn btn-secondary js-text" href="sms:+14805193669"><span class="js-text-label">Text (480) 519-3669</span></a>
       </div>
+      <p class="alt-line">Or email <a href="mailto:max@seatvault.co">max@seatvault.co</a></p>
     </div>
   </section>
 </main>
@@ -288,7 +289,7 @@ const CONFIG = {
   bookingUrl: "https://calendar.app.google/gTCp6uxVX7fLuyzNA",
   phone: "+14805193669",
   phoneDisplay: "(480) 519-3669"
-  email: ""            // e.g. "hello@seatvault.com"
+  email: "max@seatvault.co"
 };
 if (CONFIG.bookingUrl) document.querySelectorAll('.js-book').forEach(a => { a.href = CONFIG.bookingUrl; a.target = "_blank"; a.rel = "noopener"; });
 if (CONFIG.phone) {
