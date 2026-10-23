@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>document.documentElement.classList.add("js")</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light only">
 <title>SeatVault | Season Ticket and Suite Resale, Handled for You</title>
@@ -94,6 +95,33 @@ p{margin:0}
 .legend .k2{border:2px solid var(--accent)}
 .legend .k3{background:var(--accent)}
 
+
+/* showcase: text thread + listing card */
+.showcase{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:760px;margin:40px auto 0}
+.phone,.listing{background:var(--bg);border-radius:28px;padding:24px 22px;min-height:280px;display:flex;flex-direction:column}
+.phone .time{text-align:center;font-size:12px;color:var(--muted);margin-bottom:14px}
+.thread{display:flex;flex-direction:column;gap:8px;flex:1}
+.bubble{max-width:88%;padding:10px 14px;border-radius:18px;font-size:15px;line-height:1.35;opacity:0;transform:translateY(8px) scale(.96);transition:opacity .3s ease,transform .3s cubic-bezier(.34,1.56,.64,1)}
+.bubble.in{opacity:1;transform:none}
+.bubble.them{background:var(--surface);color:var(--ink);align-self:flex-start;border-bottom-left-radius:6px}
+.bubble.me{background:var(--accent);color:var(--accent-ink);align-self:flex-end;border-bottom-right-radius:6px}
+.bubble.typing{padding:12px 14px;display:flex;gap:4px}
+.bubble.typing i{width:7px;height:7px;border-radius:50%;background:var(--muted);opacity:.5;animation:blink 1s infinite}
+.bubble.typing i:nth-child(2){animation-delay:.2s}.bubble.typing i:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.listing .ev{font-size:13px;color:var(--muted)}
+.listing .sec{font-weight:600;margin-top:4px}
+.listing .price{font-size:44px;font-weight:800;letter-spacing:-0.04em;line-height:1;margin:auto 0 0;display:inline-block;transition:opacity .2s ease,transform .2s ease,color .3s ease}
+.listing .price.tick{opacity:0;transform:translateY(-8px)}
+.listing .status{margin-top:12px;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;min-height:20px}
+.listing .status i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none;transition:background .3s}
+.listing.sold .price{color:var(--accent)}
+.listing.sold .status{color:var(--accent);font-weight:600}
+.listing.sold .status i{background:var(--accent)}
+/* reveal on scroll */
+html.js .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+html.js .reveal.in{opacity:1;transform:none}
+
 /* sections */
 .section{padding:120px 0}
 .section.alt{background:var(--surface)}
@@ -157,6 +185,7 @@ p{margin:0}
   .step .num{grid-row:span 2;margin:0}
   .step h3{font-size:21px;margin:0;align-self:center;min-height:44px;display:flex;align-items:center}
   .points{grid-template-columns:minmax(0,1fr);gap:32px;max-width:560px}
+  .showcase{grid-template-columns:minmax(0,1fr);max-width:560px}
   .audience{gap:36px}
   .stats{gap:12px}
   .stat{padding:32px 20px}
@@ -177,6 +206,8 @@ p{margin:0}
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   .seat,.seat rect,.seat .dollar{transition:none !important}
+  html.js .reveal{opacity:1;transform:none;transition:none}
+  .bubble{transition:none}
 }
 </style>
 <script type="application/ld+json">
@@ -304,7 +335,7 @@ p{margin:0}
   </section>
 
   <section class="section alt" id="how">
-    <div class="wrap">
+    <div class="wrap reveal">
       <div class="section-head">
         <h2>You send the games. We handle the rest.</h2>
       </div>
@@ -313,11 +344,23 @@ p{margin:0}
         <li class="step"><div class="num">2</div><h3>We manage the listing.</h3><p>We list your seats, watch the market, and adjust the price until they sell. Every buyer transfer is handled too.</p></li>
         <li class="step"><div class="num">3</div><h3>Get paid.</h3><p>After the seats sell, the money is deposited straight to your account.</p></li>
       </ol>
+      <div class="showcase" aria-hidden="true">
+        <div class="phone">
+          <div class="time">Today 2:14 PM</div>
+          <div class="thread" id="thread"></div>
+        </div>
+        <div class="listing" id="listing">
+          <div class="ev">Thursday · 7:00 PM</div>
+          <div class="sec">Section 114 · Row 8 · 2 seats</div>
+          <span class="price" id="lprice">$145</span>
+          <div class="status"><i></i><span id="lstatus">Listed · 5 days out</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="section">
-    <div class="wrap">
+    <div class="wrap reveal">
       <div class="section-head">
         <h2>Built around you.</h2>
         <p>A personal service, not a platform. Every arrangement is set up around your seats, your schedule and your terms.</p>
@@ -334,7 +377,7 @@ p{margin:0}
   </section>
 
   <section class="section alt" id="who">
-    <div class="wrap">
+    <div class="wrap reveal">
       <div class="section-head">
         <h2>For people with better things to do.</h2>
         <p>If your seats matter but your time matters more, we take the resale off your plate.</p>
@@ -348,21 +391,21 @@ p{margin:0}
   </section>
 
   <section class="section proof" id="results">
-    <div class="wrap">
+    <div class="wrap reveal">
       <p class="kicker">Real results from a single client</p>
       <div class="section-head">
         <h2>One suite. One season. Zero listings touched.</h2>
         <p>Last season, one Philadelphia suite owner sent us the Sixers and Flyers games they couldn’t make. We handled every listing, price change and transfer, and they never lifted a finger.</p>
       </div>
       <div class="stats">
-        <div class="stat"><b>35</b><span>Games handled</span></div>
-        <div class="stat"><b>$30,000+</b><span>Earned from unused seats</span></div>
+        <div class="stat"><b data-count="35">35</b><span>Games handled</span></div>
+        <div class="stat"><b data-count="30000" data-prefix="$" data-suffix="+">$30,000+</b><span>Earned from unused seats</span></div>
       </div>
     </div>
   </section>
 
   <section class="section alt" id="faq">
-    <div class="wrap">
+    <div class="wrap reveal">
       <div class="section-head"><h2>Questions, answered.</h2></div>
       <div class="faq">
         <details><summary>How is the profit split?</summary><p>Every arrangement is different. We set terms that fit your seats and how often you release them, and walk through it together on your first call.</p></details>
@@ -377,7 +420,7 @@ p{margin:0}
   </section>
 
   <section class="contact" id="contact">
-    <div class="wrap">
+    <div class="wrap reveal">
       <h2>Let’s take this off your plate.</h2>
       <p class="lede">A 15-minute call is all it takes to get set up.</p>
       <div class="actions">
@@ -476,6 +519,70 @@ if (CONFIG.email) document.querySelectorAll('.js-email').forEach(a => { a.href =
   } else {
     loop();
   }
+})();
+</script>
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  // Reveal sections as they scroll into view
+  const revs = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    revs.forEach(el => io.observe(el));
+  } else { revs.forEach(el => el.classList.add('in')); }
+
+  // Count up the results numbers
+  const stats = document.querySelectorAll('[data-count]');
+  const fmt = (n, el) => (el.dataset.prefix || '') + Math.round(n).toLocaleString('en-US') + (el.dataset.suffix || '');
+  if ('IntersectionObserver' in window && !reduce) {
+    const io2 = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return; io2.unobserve(e.target);
+      const el = e.target, target = +el.dataset.count, t0 = performance.now(), dur = 1400;
+      const step = t => { const p = Math.min(1, (t - t0) / dur), ease = 1 - Math.pow(1 - p, 3); el.textContent = fmt(target * ease, el); if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { threshold: 0.5 });
+    stats.forEach(el => io2.observe(el));
+  }
+
+  // Text thread
+  const thread = document.getElementById('thread');
+  const script = [
+    ['them', 'Can\u2019t make Thursday. Sell all 8?'],
+    ['me', 'On it.'],
+    ['me', 'All 8 sold. Money\u2019s in your account.'],
+    ['them', 'Perfect, thanks.'],
+  ];
+  const bubble = (cls, html) => { const b = document.createElement('div'); b.className = 'bubble ' + cls; b.innerHTML = html; thread.appendChild(b); requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('in'))); return b; };
+  async function threadLoop() {
+    while (true) {
+      thread.innerHTML = '';
+      await wait(600);
+      for (const [who, text] of script) {
+        const t = bubble(who + ' typing', '<i></i><i></i><i></i>');
+        await wait(who === 'me' && text.startsWith('All') ? 2200 : 900);
+        t.remove(); bubble(who, text);
+        await wait(1100);
+      }
+      await wait(2600);
+    }
+  }
+  if (thread) { if (reduce) script.forEach(([w, t]) => bubble(w, t)); else threadLoop(); }
+
+  // Listing card that reprices itself, then sells
+  const card = document.getElementById('listing'), price = document.getElementById('lprice'), status = document.getElementById('lstatus');
+  const setPrice = async v => { price.classList.add('tick'); await wait(200); price.textContent = v; price.classList.remove('tick'); };
+  async function listingLoop() {
+    const steps = [['$145', 'Listed · 5 days out', 2200], ['$139', 'Repriced · 3 days out', 2000], ['$132', 'Repriced · 1 day out', 2000], ['$129', 'Repriced · Game day', 1800]];
+    while (true) {
+      card.classList.remove('sold');
+      for (const [v, st, d] of steps) { await setPrice(v); status.textContent = st; await wait(d); }
+      card.classList.add('sold'); status.textContent = 'Sold · 2 seats';
+      await wait(3200);
+    }
+  }
+  if (card) { if (reduce) { card.classList.add('sold'); price.textContent = '$129'; status.textContent = 'Sold · 2 seats'; } else listingLoop(); }
 })();
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
